@@ -4,7 +4,5 @@ import { Injectable } from '@nestjs/common';
 export class UsersRepository {
   constructor() {}
 
-  async getUsers() {
-    
-  }
+  async getUsers() {}
 }
