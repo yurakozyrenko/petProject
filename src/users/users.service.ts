@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { CreateUsersDto } from './dto/createUsers.dto';
 import { ConfigService } from '@nestjs/config';
@@ -28,13 +28,6 @@ export class UsersService {
 
   async createNewUser({ firstname, username, email, password }: CreateUsersDto) {
     this.logger.log(`Trying to create User with email: ${email}`);
-
-    const existUser = await this.usersRepository.findUserByEmail(email);
-
-    if (existUser) {
-      this.logger.error(`User with email: ${email} already exist`);
-      throw new HttpException(`User with email: ${email} already exist`, HttpStatus.BAD_REQUEST);
-    }
 
     const hashedPassword = await bcrypt.hash(password, this.hash);
 
