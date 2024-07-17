@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreateUsersDto } from './dto/createUsers.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { User } from './entity/users.entity';
@@ -26,19 +26,19 @@ export class UsersService {
     return user;
   }
 
-  async createNewUser({ firstname, username, email, password }: CreateUsersDto) {
+  async createNewUser({ firstname, username, email, password }: CreateUserDto) {
     this.logger.log(`Trying to create User with email: ${email}`);
 
     const hashedPassword = await bcrypt.hash(password, this.hash);
 
-    const createUsersDto: CreateUsersDto = {
+    const createUserDto: CreateUserDto = {
       firstname,
       username,
       email,
       password: hashedPassword,
     };
 
-    const { raw } = await this.usersRepository.createNewUser(createUsersDto);
+    const { raw } = await this.usersRepository.createNewUser(createUserDto);
 
     this.logger.debug(`User successfully created with id: ${raw[0].id}`);
   }

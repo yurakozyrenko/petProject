@@ -1,7 +1,7 @@
 import { IsEmail, IsInt, IsString, Length } from 'class-validator';
 import { User } from '../entity/users.entity';
 
-export class UsersDto {
+export class UserDto {
   @IsInt()
   id: User['id'];
 

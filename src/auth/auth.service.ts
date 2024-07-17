@@ -1,10 +1,10 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateUsersDto } from '../users/dto/createUsers.dto';
 import { UsersService } from '../users/users.service';
-import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { TokenService } from '../token/token.service';
 import { TToken } from '../utils/types';
+import { UserLoginDto } from '../users/dto/userLogin.dto';
+import { RegisterUserDto } from '../users/dto/registerUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async registerUser({ firstname, username, email, password }: CreateUsersDto) {
+  async registerUser({ firstname, username, email, password }: RegisterUserDto) {
     const existUser = await this.userService.findUserByEmail(email);
 
     if (existUser) {
@@ -22,17 +22,17 @@ export class AuthService {
       throw new HttpException(`User with email: ${email} already exist`, HttpStatus.BAD_REQUEST);
     }
 
-    const createUsersDto = {
+    const createUserDto = {
       firstname,
       username,
       email,
       password,
     };
 
-    return this.userService.createNewUser(createUsersDto);
+    return this.userService.createNewUser(createUserDto);
   }
 
-  async loginUser({ email, password }: AuthDto): Promise<TToken> {
+  async loginUser({ email, password }: UserLoginDto): Promise<TToken> {
     const existUser = await this.userService.findUserByEmail(email);
 
     if (!existUser) {
