@@ -11,16 +11,15 @@ export class UsersRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async findUserByEmail(email: string): Promise<User> {
+    return await this.userRepository.createQueryBuilder('users').where('users.email = :email', { email }).getOne();
+  }
+
   async createNewUser(createUsersDto: CreateUsersDto): Promise<InsertResult> {
-    return await this.userRepository
-      .createQueryBuilder('user')
-      .insert()
-      .into(User)
-      .values(createUsersDto)
-      .execute();
+    return await this.userRepository.createQueryBuilder('users').insert().into(User).values(createUsersDto).execute();
   }
 
   async getUsers(): Promise<[User[], number]> {
-    return await this.userRepository.createQueryBuilder('user').getManyAndCount();
+    return await this.userRepository.createQueryBuilder('users').getManyAndCount();
   }
 }

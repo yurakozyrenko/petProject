@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsString, Length } from 'class-validator';
 import { User } from '../entity/users.entity';
 
 export class UsersDto {
@@ -16,5 +16,6 @@ export class UsersDto {
   email: User['email'];
 
   @IsString()
+  @Length(4, 40)
   password: User['password'];
 }
