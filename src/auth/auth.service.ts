@@ -45,9 +45,13 @@ export class AuthService {
       throw new BadRequestException('password incorrect');
     }
 
+    const payload = {
+      email: existUser.email,
+    };
+
     this.logger.log(`Trying to create token User with email: ${email}`);
 
-    const token = await this.tokenService.generateJwtToken({ email });
+    const token = await this.tokenService.generateJwtToken(payload);
 
     this.logger.debug(`User token successfully created with email: ${email}`);
 

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { User } from './entity/users.entity';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +25,19 @@ export class UsersService {
     this.logger.debug(`User successfully get by email ${email}`);
 
     return user;
+  }
+
+  async updateUser(email: User['email'], { firstname, username }: UpdateUserDto) {
+    this.logger.log(`Trying to updated User with email: ${email}`);
+
+    const updateUserDto: UpdateUserDto = {
+      firstname,
+      username,
+    };
+
+    const { raw } = await this.usersRepository.updateUser(email, updateUserDto);
+
+    this.logger.debug(`User successfully updated with id: ${raw[0].id}`);
   }
 
   async createNewUser({ firstname, username, email, password }: CreateUserDto) {
