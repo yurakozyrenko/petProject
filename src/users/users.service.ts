@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcrypt';
 import { User } from './entity/users.entity';
 import { UpdateUserDto } from './dto/updateUser.dto';
 
@@ -40,24 +39,23 @@ export class UsersService {
     this.logger.debug(`User successfully updated with id: ${raw[0].id}`);
   }
 
-  async createNewUser({ firstname, username, email, password }: CreateUserDto) {
-    this.logger.log(`Trying to create User with email: ${email}`);
-
-    const hashedPassword = await bcrypt.hash(password, this.hash);
-
-    const createUserDto: CreateUserDto = {
-      firstname,
-      username,
-      email,
-      password: hashedPassword,
-    };
+  async createNewUser(createUserDto: CreateUserDto) {
+    this.logger.log(`Trying to create User`);
 
     const { raw } = await this.usersRepository.createNewUser(createUserDto);
 
     this.logger.debug(`User successfully created with id: ${raw[0].id}`);
   }
 
-  async getUsers() {
+  async deleteUser(email: User['email']) {
+    this.logger.log(`Trying to delete User with email: ${email}`);
+
+    const { raw } = await this.usersRepository.deleteUser(email);
+
+    this.logger.debug(`User successfully delete with id: ${raw[0].id}`);
+  }
+
+  async getUsers(): Promise<User[]> {
     this.logger.log(`Trying to get Users`);
 
     const [users, count] = await this.usersRepository.getUsers();
